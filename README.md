@@ -1,71 +1,34 @@
-# gd-creation README
+# Godot-create-files
 
-This is the README for your extension "gd-creation". After writing up a brief description, we recommend including the following sections.
+**Godot-create-files** is a VS Code extension that helps you quickly create and manage Godot `.gd` scripts and `.tscn` scene files directly from the file explorer.
 
-## Features
+## 🚀 Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- 📄 Create new GDScript files with a selected `extends` base class.
+- 🔗 Attach a `.gd` script to a node inside a `.tscn` scene.
+- ❌ Detach a script from a node.
+- 🎭 Create new `.tscn` scene files with a chosen root node type (e.g., `Node3D`, `CharacterBody3D`, etc.).
+- 👆 All actions are available via right-click context menu in the explorer.
 
-For example if there is an image subfolder under your extension project workspace:
+## 📂 How to Use
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Right-click on a folder in the VS Code file explorer.
+2. Select an action under the **GDScript Files** submenu:
+   - `Create Godot GDScript File`
+   - `Attach GDScript to Scene`
+   - `Detach GDScript from Node`
+   - `Create Godot Scene`
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## ⚙️ Requirements
 
-## Requirements
+- VS Code `^1.102.0` or higher.
+- A Godot project structure with `.gd` and `.tscn` files.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## 🔐 Notes
 
-## Extension Settings
+Each created `.gd` script is accompanied by a `.uid` file that stores a unique identifier. This UID is used for referencing the script inside `.tscn` files.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## 🧪 Status
 
-For example:
+This extension is under active development. Bugs or limitations may occur. Contributions and feedback are welcome!
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
