@@ -2,8 +2,9 @@
   "name": "gd-creation",
   "displayName": "Godot-create-files",
   "description": "Extension to create and manage Godot scripts and scenes in VS Code",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "SwanIT",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.102.0"
   },
