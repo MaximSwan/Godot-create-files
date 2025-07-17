@@ -4,16 +4,16 @@ import * as path from 'path';
 import { nodes } from './nodes-list';
 
 export function activate(context: vscode.ExtensionContext) {
-  // === Создание Godot-файла ===
+  // === Create Godot script file ===
   const createGodotFile = vscode.commands.registerCommand('gd-creation.createGodotFile', async (uri: vscode.Uri) => {
     const folderPath = uri.fsPath;
 
     const input = await vscode.window.showInputBox({
-      prompt: 'Введите имя нового Godot-файла (без .gd)',
+      prompt: 'Enter the name of the new Godot script file (without .gd)',
       value: 'NewScript',
       validateInput: (value) => {
-        if (!value.trim()) return 'Имя файла не может быть пустым';
-        if (/[\\/:*?"<>|]/.test(value)) return 'Недопустимые символы в имени файла';
+        if (!value.trim()) return 'Filename cannot be empty';
+        if (/[\/:*?"<>|]/.test(value)) return 'Invalid characters in filename';
         return null;
       },
     });
@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
     const fileName = input.endsWith('.gd') ? input : `${input}.gd`;
 
     const selectedBase = await vscode.window.showQuickPick(nodes, {
-      title: 'Выберите базовый класс (extends)',
+      title: 'Select base class (extends)',
       placeHolder: 'Node3D',
     });
 
@@ -44,19 +44,19 @@ export function activate(context: vscode.ExtensionContext) {
       const uidContent = `uid://${uid}`;
       await vscode.workspace.fs.writeFile(uidFileUri, new TextEncoder().encode(uidContent));
 
-      vscode.window.showInformationMessage(`Создано: ${fileName} с extends ${chosenBase}`);
+      vscode.window.showInformationMessage(`Created: ${fileName} with extends ${chosenBase}`);
     } catch (err) {
-      vscode.window.showErrorMessage(`Ошибка при создании файлов: ${err}`);
+      vscode.window.showErrorMessage(`Error creating files: ${err}`);
     }
   });
 
   context.subscriptions.push(createGodotFile);
 
-  // === Прикрепление скрипта ===
+  // === Attach script to scene ===
   const attachScript = vscode.commands.registerCommand('gd-creation.attachScriptToScene', async (uri: vscode.Uri) => {
     const files = await vscode.workspace.findFiles('**/*.gd', '**/node_modules/**', 200);
     if (files.length === 0) {
-      vscode.window.showWarningMessage('Скрипты .gd не найдены');
+      vscode.window.showWarningMessage('.gd scripts not found');
       return;
     }
 
@@ -67,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
         uri: f,
       })),
       {
-        title: 'Выберите скрипт для прикрепления',
+        title: 'Select script to attach',
       },
     );
 
@@ -77,7 +77,6 @@ export function activate(context: vscode.ExtensionContext) {
     const text = document.getText();
     const lines = text.split('\n');
 
-    // Сканируем все узлы с name="..." у которых НЕТ script = ExtResource(...)
     const nodeNames: string[] = [];
     let currentNode: string | null = null;
     let hasScript = false;
@@ -98,12 +97,12 @@ export function activate(context: vscode.ExtensionContext) {
     if (currentNode && !hasScript) nodeNames.push(currentNode);
 
     if (nodeNames.length === 0) {
-      vscode.window.showWarningMessage('Нет узлов без привязанных скриптов.');
+      vscode.window.showWarningMessage('No nodes without attached scripts found.');
       return;
     }
 
     const nodeName = await vscode.window.showQuickPick(nodeNames, {
-      title: 'Выберите узел, к которому прикрепить скрипт',
+      title: 'Select node to attach script to',
     });
 
     if (!nodeName) return;
@@ -116,7 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
     const scriptAssignmentLine = `script = ExtResource(\"${extResId}\")`;
 
     if (text.includes(`path=\"res://${relativeScriptPath}\"`)) {
-      vscode.window.showWarningMessage('Этот скрипт уже подключён.');
+      vscode.window.showWarningMessage('This script is already attached.');
       return;
     }
 
@@ -126,7 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
     const nodeHeader = `[node name=\"${nodeName}\"`;
     const nodeLineIndex = lines.findIndex((line) => line.trim().startsWith(nodeHeader));
     if (nodeLineIndex === -1) {
-      vscode.window.showErrorMessage(`Узел с именем \"${nodeName}\" не найден в сцене.`);
+      vscode.window.showErrorMessage(`Node named \"${nodeName}\" not found in scene.`);
       return;
     }
 
@@ -149,20 +148,21 @@ export function activate(context: vscode.ExtensionContext) {
     await vscode.workspace.applyEdit(edit);
     await document.save();
 
-    vscode.window.showInformationMessage(`Скрипт успешно прикреплён к узлу \"${nodeName}\".`);
+    vscode.window.showInformationMessage(`Script successfully attached to node \"${nodeName}\".`);
   });
 
   context.subscriptions.push(attachScript);
-  // === Создание Godot-сцены ===
+
+  // === Create Godot scene ===
   const createGodotScene = vscode.commands.registerCommand('gd-creation.createGodotScene', async (uri: vscode.Uri) => {
     const folderPath = uri.fsPath;
 
     const input = await vscode.window.showInputBox({
-      prompt: 'Введите имя новой сцены (без .tscn)',
+      prompt: 'Enter the name of the new scene (without .tscn)',
       value: 'NewScene',
       validateInput: (value) => {
-        if (!value.trim()) return 'Имя сцены не может быть пустым';
-        if (/[\\/:*?"<>|]/.test(value)) return 'Недопустимые символы в имени сцены';
+        if (!value.trim()) return 'Scene name cannot be empty';
+        if (/[\/:*?"<>|]/.test(value)) return 'Invalid characters in scene name';
         return null;
       },
     });
@@ -172,7 +172,7 @@ export function activate(context: vscode.ExtensionContext) {
     const fileName = input.endsWith('.tscn') ? input : `${input}.tscn`;
 
     const selectedBase = await vscode.window.showQuickPick(nodes, {
-      title: 'Выберите тип корневого узла',
+      title: 'Select root node type',
       placeHolder: 'Node3D',
     });
 
@@ -185,12 +185,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     try {
       await vscode.workspace.fs.writeFile(sceneUri, new TextEncoder().encode(sceneContent));
-      vscode.window.showInformationMessage(`Сцена создана: ${fileName} с корневым узлом ${chosenBase}`);
+      vscode.window.showInformationMessage(`Scene created: ${fileName} with root node ${chosenBase}`);
     } catch (err) {
-      vscode.window.showErrorMessage(`Ошибка при создании сцены: ${err}`);
+      vscode.window.showErrorMessage(`Error creating scene: ${err}`);
     }
   });
-  // === Открепление скрипта ===
+
+  context.subscriptions.push(createGodotScene);
+
+  // === Detach script from scene ===
   const detachScript = vscode.commands.registerCommand('gd-creation.detachScriptFromScene', async (uri: vscode.Uri) => {
     try {
       const document = await vscode.workspace.openTextDocument(uri);
@@ -216,13 +219,13 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       if (nodeScriptMap.length === 0) {
-        vscode.window.showInformationMessage('Скрипты для открепления не найдены.');
+        vscode.window.showInformationMessage('No scripts found for detachment.');
         return;
       }
 
       const selected = await vscode.window.showQuickPick(
         nodeScriptMap.map((s) => ({ label: s.nodeName, description: s.extResourceId })),
-        { title: 'Выберите узел для открепления скрипта' },
+        { title: 'Select node to detach script from' },
       );
 
       if (!selected) return;
@@ -241,9 +244,9 @@ export function activate(context: vscode.ExtensionContext) {
       await vscode.workspace.applyEdit(edit);
       await document.save();
 
-      vscode.window.showInformationMessage(`Скрипт откреплён от узла \"${target.nodeName}\".`);
+      vscode.window.showInformationMessage(`Script detached from node \"${target.nodeName}\".`);
     } catch (err) {
-      vscode.window.showErrorMessage(`Ошибка при откреплении скрипта: ${err}`);
+      vscode.window.showErrorMessage(`Error detaching script: ${err}`);
     }
   });
 

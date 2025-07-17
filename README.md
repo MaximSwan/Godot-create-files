@@ -10,6 +10,8 @@
 - 🎭 Create new `.tscn` scene files with a chosen root node type (e.g., `Node3D`, `CharacterBody3D`, etc.).
 - 👆 All actions are available via right-click context menu in the explorer.
 
+![alt text](image.png)
+
 ## 📂 How to Use
 
 1. Right-click on a folder in the VS Code file explorer.
